@@ -103,7 +103,9 @@ class BdrThermostat(ClimateEntity, RestoreEntity):
 
     async def async_update(self):
         status = await self._bdr_api.get_status(self._attr_unique_id)
-        _LOGGER.error(status)
+
+        # output of received data as debug log
+        _LOGGER.debug(status)
 
         if status:
             self._attr_current_temperature = status["roomTemperature"]["value"]

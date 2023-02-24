@@ -113,7 +113,6 @@ class ErrorSensor(SensorEntity):
         super().__init__()
         self.hass = hass
         self._bdr_api = hass.data[PLATFORM].get(DATA_KEY_API)
-        self._attr_state_class = SensorStateClass.MEASUREMENT
         self._attr_should_poll = True
         self._attr_device_info = {
             "identifiers": {
@@ -215,8 +214,11 @@ class BurningHoursSensor(SensorEntity):
         consumption = consumptions.get("burningHoursCH", None)
 
         if consumption:
-            self._attr_native_value = int(consumption["value"])             
-            self._attr_native_unit_of_measurement = consumption["unit"]     
+            self._attr_native_value = int(consumption["value"])    
+
+            # for Remeha the unit "hours" is received which is mot known to HA
+            # --> use HA unit "h" instead
+            self._attr_native_unit_of_measurement = "h"     
 
         else:
             self._attr_native_unit_of_measurement = ""
@@ -305,7 +307,6 @@ class HeatingSensor(SensorEntity):
         super().__init__()
         self.hass = hass
         self._bdr_api = hass.data[PLATFORM].get(DATA_KEY_API)
-        self._attr_state_class = SensorStateClass.MEASUREMENT
         self._attr_should_poll = True
         self._attr_device_info = {
             "identifiers": {
